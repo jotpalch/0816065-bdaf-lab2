@@ -1,13 +1,14 @@
-const bip39 = require('bip39')
+const bip39 = require('akachain-bip39')
 const HDWallet = require('ethereum-hdwallet')
-
 
 function Generator(_pre = "aa") {
     // var _pre = "aa"
     var _pre_len = _pre.length
 
     while(1){
-        var mnemonic = bip39.generateMnemonic()
+        var _mnemonic = new bip39();
+        var mnemonic =  _mnemonic.toString() ;
+        // var mnemonic = bip39.generateMnemonic()
         // var seed = bip39.mnemonicToSeed(mnemonic);
         // var hdWallet = HDWallet.fromMasterSeed(seed);
         var hdwallet = HDWallet.fromMnemonic(mnemonic);
@@ -27,8 +28,8 @@ function Generator(_pre = "aa") {
     }
 }
 
-Generator();
-// console.log(Generator());
+// Generator();
+console.log(Generator());
 // document.querySelector("#mnemonic").innerHTML = "mnemonic";
 
 // export default Generator;

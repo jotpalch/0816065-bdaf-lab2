@@ -1,6 +1,4 @@
 const express = require("express");
-const bip39 = require("bip39");
-const HDWallet = require("ethereum-hdwallet");
 
 var app = express();
 
