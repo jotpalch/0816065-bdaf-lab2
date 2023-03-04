@@ -1,7 +1,7 @@
 const bip39 = require('akachain-bip39')
 const HDWallet = require('ethereum-hdwallet')
 
-function Generator(_pre = "aa") {
+function vag(_pre = "aa") {
     // var _pre = "aa"
     var _pre_len = _pre.length
     var r = ""
@@ -13,7 +13,7 @@ function Generator(_pre = "aa") {
         // var hdWallet = HDWallet.fromMasterSeed(seed);
         var hdwallet = HDWallet.fromMnemonic(mnemonic);
         var address = hdwallet.derive(`m/44'/60'/0'/0/0`).getAddress().toString('hex')
-        console.log(address)
+        // console.log(address)
         // console.log(address.substring(0, _pre_len))
         // console.log(_pre)
         if(address.substring(0, _pre_len) === _pre){
@@ -22,10 +22,12 @@ function Generator(_pre = "aa") {
             // console.log("PublicKey: "+publick)
             // console.log("PrivateKey: "+privatek)
             // console.log(mnemonic)
-            return { publick: publick, privatek: privatek, mnemonic: mnemonic };
+            return { address:address, publick: publick, privatek: privatek, mnemonic: mnemonic };
         }
     }
 }
+
+module.exports = {vag: vag}
 
 // console.log(Generator());
 

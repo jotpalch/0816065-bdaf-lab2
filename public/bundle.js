@@ -1,8 +1,8 @@
-(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.vag = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 const bip39 = require('akachain-bip39')
 const HDWallet = require('ethereum-hdwallet')
 
-function Generator(_pre = "aa") {
+function vag(_pre = "aa") {
     // var _pre = "aa"
     var _pre_len = _pre.length
     var r = ""
@@ -14,7 +14,7 @@ function Generator(_pre = "aa") {
         // var hdWallet = HDWallet.fromMasterSeed(seed);
         var hdwallet = HDWallet.fromMnemonic(mnemonic);
         var address = hdwallet.derive(`m/44'/60'/0'/0/0`).getAddress().toString('hex')
-        console.log(address)
+        // console.log(address)
         // console.log(address.substring(0, _pre_len))
         // console.log(_pre)
         if(address.substring(0, _pre_len) === _pre){
@@ -23,10 +23,12 @@ function Generator(_pre = "aa") {
             // console.log("PublicKey: "+publick)
             // console.log("PrivateKey: "+privatek)
             // console.log(mnemonic)
-            return { publick: publick, privatek: privatek, mnemonic: mnemonic };
+            return { address:address, publick: publick, privatek: privatek, mnemonic: mnemonic };
         }
     }
 }
+
+module.exports = {vag: vag}
 
 // console.log(Generator());
 
@@ -106791,4 +106793,5 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
 }).call(this)}).call(this,require("timers").setImmediate,require("timers").clearImmediate)
 },{"process/browser.js":593,"timers":630}],631:[function(require,module,exports){
 arguments[4][435][0].apply(exports,arguments)
-},{"dup":435}]},{},[1]);
+},{"dup":435}]},{},[1])(1)
+});
