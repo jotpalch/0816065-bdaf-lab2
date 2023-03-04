@@ -5,12 +5,60 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vanity Address Generator</title>
-
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
 </head>
 <body>
-    <p id="mnemonic">123</p>
+
+    <div>
+        <label for="pre" class="form-label">Set you prefix:</label>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon3">0x</span>
+            <input type="text" class="form-control" id="pre" aria-describedby="basic-addon3">
+            <button type="submit" onclick="S();">Submit</button>
+        </div>
+    </div>
+    
+
+    <table class="table table-dark table-striped">
+        <tbody id="info">
+
+        </tbody>
+    </table>
+
 </body>
 
 <script type="text/javascript" src="/bundle.js"></script>
+
+<script>
+    function capitalizeFirstLetter(str) {
+
+            // converting first letter to uppercase
+            const capitalized = str.charAt(0).toUpperCase() + str.slice(1);
+
+            return capitalized;
+        }
+
+    function S(){
+        var _pre = document.querySelector("#pre").value.toLowerCase()
+        var result = vag.vag(_pre);
+
+        let html = "";
+        
+        $.each(result, function (idx, row) {
+            html += '<tr>'
+            html += "<td>" + capitalizeFirstLetter(idx) + "</td>"
+            html += "<td>" + row + "</td>"
+            html += '</tr>';
+        })
+        
+        $("#info").html(html);
+    }
+    
+</script>
 
 </html>
