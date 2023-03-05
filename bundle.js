@@ -75550,7 +75550,7 @@ exports.decrypt = function(privateKey, opts) {
 
 var elliptic = exports;
 
-elliptic.version = require('../package.json').version;
+elliptic.version = require('./package.json').version;
 elliptic.utils = require('./elliptic/utils');
 elliptic.rand = require('brorand');
 elliptic.curve = require('./elliptic/curve');
