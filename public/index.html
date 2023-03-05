@@ -33,10 +33,16 @@
                         <h3 class="cover-heading">Set You Prefix Here</h3>
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon3">0x</span>
-                            <input type="text" class="form-control" id="pre" aria-describedby="basic-addon3">
-                            <button type="submit" class="btn btn-dark" onclick="S();">Submit</button>
+                            <input type="text" class="form-control" id="pre" aria-describedby="basic-addon3" oninput="longTimeWarning(this.value)" onchange="longTimeWarning(this.value)">
+                            <button type="submit" class="btn btn-dark" onclick="sub();">Submit</button>
+                            <button type="button" class="btn btn-danger" onclick="stop();">Stop</button>
                         </div>
                     </div>
+
+                    <div class="alert alert-danger" role="alert" id="warning">
+                        The length of the prefix is over 5. This calculation may cost a lot of time.
+                    </div>
+
                     <table class="table table-dark table-striped">
                         <tbody id="info">
                     
@@ -47,34 +53,20 @@
     
         <footer class="mastfoot mt-auto">
             <div class="inner">
-                <p>Made by <a href="#">@Jotpac</a> .</p>
+                <p>Made by <a href="https://github.com/jotpalch">@jotpac</a> .</p>
             </div>
         </footer>
     </div>
-
-
-
-    <!-- <div>
-        <label for="pre" class="form-label">Set you prefix:</label>
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon3">0x</span>
-            <input type="text" class="form-control" id="pre" aria-describedby="basic-addon3">
-            <button type="submit" onclick="S();">Submit</button>
-        </div>
-    </div>
-    
-
-    <table class="table table-dark table-striped">
-        <tbody id="info">
-
-        </tbody>
-    </table> -->
 
 </body>
 
 <script type="text/javascript" src="./bundle.js"></script>
 
 <script>
+
+    var w = undefined;
+    $("#warning").hide();
+
     function capitalizeFirstLetter(str) {
 
             // converting first letter to uppercase
@@ -82,21 +74,81 @@
 
             return capitalized;
         }
+    
+    function nonWorker() {
+            var _pre = document.querySelector("#pre").value.toLowerCase()
+            var result = vag.vag(_pre);
 
-    function S(){
-        var _pre = document.querySelector("#pre").value.toLowerCase()
-        var result = vag.vag(_pre);
+            let html = "";
 
-        let html = "";
-        
-        $.each(result, function (idx, row) {
-            html += '<tr>'
-            html += "<td>" + capitalizeFirstLetter(idx) + "</td>"
-            html += "<td>" + row + "</td>"
-            html += '</tr>';
-        })
-        
-        $("#info").html(html);
+            $.each(result, function (idx, row) {
+                html += '<tr>'
+                html += "<td style='border-right:1px solid gray'>" + capitalizeFirstLetter(idx) + "</td>"
+                html += "<td>" + row + "</td>"
+                html += '</tr>';
+            })
+
+            $("#info").html(html);
+    }
+    
+
+    function goWorker() {
+        var _pre = document.querySelector("#pre").value.toLowerCase();
+        $("#pre").attr('disabled', true);
+
+        w = new Worker("worker.js");
+
+        w.onmessage = function (e) {
+            console.log(e.data);
+            let html = "";
+            if(typeof e.data  === "object") {
+                $.each(e.data, function (idx, row) {
+                    html += '<tr>'
+                    html += "<td style='border-right:1px solid gray'>" + capitalizeFirstLetter(idx) + "</td>"
+                    html += "<td>" + row + "</td>"
+                    html += '</tr>';
+                })
+                $("#pre").attr('disabled', false);
+                w = undefined;
+            }
+            else{
+                html += '<tr>'
+                html += "<td style='border-right:1px solid gray'>" + "Address" + "</td>"
+                html += "<td style='width: 500px'>" + e.data + "</td>"
+                html += '</tr>';
+            }
+
+            $("#info").html(html);
+        }
+
+        w.postMessage(_pre);
+    }
+    
+    function stop(){
+        if(w !== undefined) {
+            w.terminate();
+            w = undefined;
+            $("#pre").attr('disabled', false);            
+        }      
+    }
+
+    function longTimeWarning(str){
+        if(str.length > 5){
+            $("#warning").show()
+        }
+        else{
+            $("#warning").hide()
+        }
+    }
+
+
+    function sub(){
+        if (typeof (Worker) !== "undefined") {
+            goWorker();
+        }
+        else {
+            nonWorker();
+        }
     }
     
 </script>
