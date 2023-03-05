@@ -39,9 +39,16 @@
                         </div>
                     </div>
 
-                    <div class="alert alert-danger" role="alert" id="warning">
+
+                    <div class="alert alert-danger" role="alert" id="regex">
+                        Please fit the format (0-9 a-f)
+                    </div>
+
+                    <div class="alert alert-info" role="alert" id="warning">
                         The length of the prefix is over 5. This calculation may cost a lot of time.
                     </div>
+
+                    
 
                     <table class="table table-dark table-striped">
                         <tbody id="info">
@@ -64,8 +71,10 @@
 
 <script>
 
+    const rules = /[^a-f\d]/;
     var w = undefined;
     $("#warning").hide();
+    $("#regex").hide();
 
     function capitalizeFirstLetter(str) {
 
@@ -94,6 +103,11 @@
 
     function goWorker() {
         var _pre = document.querySelector("#pre").value.toLowerCase();
+        
+        if(rules.test(_pre)){
+            $("#regex").show()
+            return
+        }
         $("#pre").attr('disabled', true);
 
         w = new Worker("worker.js");
@@ -133,11 +147,17 @@
     }
 
     function longTimeWarning(str){
+        if (rules.test(str)) {
+            $("#regex").show();
+        }
+        else {
+            $("#regex").hide();
+        }
         if(str.length > 5){
-            $("#warning").show()
+            $("#warning").show();
         }
         else{
-            $("#warning").hide()
+            $("#warning").hide();
         }
     }
 
