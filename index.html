@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,6 +19,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>
+
 <body class="text-center">
     <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
         <header class="masthead mb-auto">
@@ -27,30 +29,38 @@
         </header>
         <h1 class="cover-heading">Vanity Address Generator</h1>
         <main role="main" class="inner cover">
-                <div class="tab-pane fade show active" id="home" role="tabpanel">
-                    
-                    <div>
-                        <h3 class="cover-heading">Set You Prefix Here</h3>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text" id="basic-addon3">0x</span>
-                            <input type="text" class="form-control" id="pre" aria-describedby="basic-addon3" oninput="longTimeWarning(this.value)" onchange="longTimeWarning(this.value)">
-                            <button type="submit" class="btn btn-dark" onclick="sub();">Submit</button>
-                            <button type="button" class="btn btn-danger" onclick="stop();">Stop</button>
-                        </div>
-                    </div>
+            <div class="tab-pane fade show active" id="home" role="tabpanel">
 
-                    <div class="alert alert-danger" role="alert" id="warning">
-                        The length of the prefix is over 5. This calculation may cost a lot of time.
+                <div>
+                    <h3 class="cover-heading">Set You Prefix Here</h3>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon3">0x</span>
+                        <input type="text" class="form-control" id="pre" aria-describedby="basic-addon3"
+                            oninput="longTimeWarning(this.value)" onchange="longTimeWarning(this.value)">
+                        <button type="submit" class="btn btn-dark" onclick="sub();">Submit</button>
+                        <button type="button" class="btn btn-danger" onclick="stop();">Stop</button>
                     </div>
-
-                    <table class="table table-dark table-striped">
-                        <tbody id="info">
-                    
-                        </tbody>
-                    </table>
                 </div>
+
+
+                <div class="alert alert-danger" role="alert" id="regex">
+                    Please fit the format (0-9 a-f)
+                </div>
+
+                <div class="alert alert-info" role="alert" id="warning">
+                    The length of the prefix is over 5. This calculation may cost a lot of time.
+                </div>
+
+
+
+                <table class="table table-dark table-striped">
+                    <tbody id="info">
+
+                    </tbody>
+                </table>
+            </div>
         </main>
-    
+
         <footer class="mastfoot mt-auto">
             <div class="inner">
                 <p>Made by <a href="https://github.com/jotpalch">@jotpac</a> .</p>
@@ -64,36 +74,43 @@
 
 <script>
 
+    const rules = /[^a-f\d]/;
     var w = undefined;
     $("#warning").hide();
+    $("#regex").hide();
 
     function capitalizeFirstLetter(str) {
 
-            // converting first letter to uppercase
-            const capitalized = str.charAt(0).toUpperCase() + str.slice(1);
+        // converting first letter to uppercase
+        const capitalized = str.charAt(0).toUpperCase() + str.slice(1);
 
-            return capitalized;
-        }
-    
-    function nonWorker() {
-            var _pre = document.querySelector("#pre").value.toLowerCase()
-            var result = vag.vag(_pre);
-
-            let html = "";
-
-            $.each(result, function (idx, row) {
-                html += '<tr>'
-                html += "<td style='border-right:1px solid gray'>" + capitalizeFirstLetter(idx) + "</td>"
-                html += "<td>" + row + "</td>"
-                html += '</tr>';
-            })
-
-            $("#info").html(html);
+        return capitalized;
     }
-    
+
+    function nonWorker() {
+        var _pre = document.querySelector("#pre").value.toLowerCase()
+        var result = vag.vag(_pre);
+
+        let html = "";
+
+        $.each(result, function (idx, row) {
+            html += '<tr>'
+            html += "<td style='border-right:1px solid gray'>" + capitalizeFirstLetter(idx) + "</td>"
+            html += "<td>" + row + "</td>"
+            html += '</tr>';
+        })
+
+        $("#info").html(html);
+    }
+
 
     function goWorker() {
         var _pre = document.querySelector("#pre").value.toLowerCase();
+
+        if (rules.test(_pre)) {
+            $("#regex").show()
+            return
+        }
         $("#pre").attr('disabled', true);
 
         w = new Worker("worker.js");
@@ -101,7 +118,7 @@
         w.onmessage = function (e) {
             console.log(e.data);
             let html = "";
-            if(typeof e.data  === "object") {
+            if (typeof e.data === "object") {
                 $.each(e.data, function (idx, row) {
                     html += '<tr>'
                     html += "<td style='border-right:1px solid gray'>" + capitalizeFirstLetter(idx) + "</td>"
@@ -111,7 +128,7 @@
                 $("#pre").attr('disabled', false);
                 w = undefined;
             }
-            else{
+            else {
                 html += '<tr>'
                 html += "<td style='border-right:1px solid gray'>" + "Address" + "</td>"
                 html += "<td style='width: 500px'>" + e.data + "</td>"
@@ -123,26 +140,32 @@
 
         w.postMessage(_pre);
     }
-    
-    function stop(){
-        if(w !== undefined) {
+
+    function stop() {
+        if (w !== undefined) {
             w.terminate();
             w = undefined;
-            $("#pre").attr('disabled', false);            
-        }      
-    }
-
-    function longTimeWarning(str){
-        if(str.length > 5){
-            $("#warning").show()
-        }
-        else{
-            $("#warning").hide()
+            $("#pre").attr('disabled', false);
         }
     }
 
+    function longTimeWarning(str) {
+        if (rules.test(str)) {
+            $("#regex").show();
+        }
+        else {
+            $("#regex").hide();
+        }
+        if (str.length > 5) {
+            $("#warning").show();
+        }
+        else {
+            $("#warning").hide();
+        }
+    }
 
-    function sub(){
+
+    function sub() {
         if (typeof (Worker) !== "undefined") {
             goWorker();
         }
@@ -150,7 +173,7 @@
             nonWorker();
         }
     }
-    
+
 </script>
 
 </html>
