@@ -4,7 +4,7 @@
 
 https://vag.jotpac.com/  
 
-![](https://i.imgur.com/WYWhsM1.jpg)
+![](https://github.com/jotpalch/0816065-bdaf-lab2/blob/d3d132715db7d44e66de6ec7a4ae7168bacc49f4/demo.gif)
 
 ### Implementation details
 
