@@ -16,7 +16,7 @@ Performing heavy calculation without interfering with the user interface
 
 ### akachain-bip39
 https://www.npmjs.com/package/akachain-bip39  
-Using akachain-bip39 instead of bip39 for impelement it in the bowser  
+Using akachain-bip39 instead of bip39 for impelementing it in the bowser  
 ( There is a bug in bip39 module when convert into browser mode with bowserify.js )
 
 ---
