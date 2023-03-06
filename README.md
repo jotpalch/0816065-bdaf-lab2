@@ -14,7 +14,17 @@ https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_worke
 Run scripts in background threads with Web_Workers_API to prevent page unresponsive  
 Performing heavy calculation without interfering with the user interface
 
+### akachain-bip39
+https://www.npmjs.com/package/akachain-bip39  
+Using akachain-bip39 instead of bip39 for impelement it in the bowser  
+( There is a bug in bip39 module when convert into browser mode with bowserify.js )
+
 ---
+
+### Installation  
+
+Recommand do it under `Linux` or `Mac OS`  
+There is an encoding bug while converting into the browser mode in `Windows`
 
 Pack `main_worker.js` with bowserify.js
 ```
